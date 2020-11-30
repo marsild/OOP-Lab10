@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class ConcurrentGUI extends JFrame {
+public final class ConcurrentGUI extends JFrame {
 
     /**
      * 
@@ -35,13 +35,13 @@ public class ConcurrentGUI extends JFrame {
         panel.add(stop);
         this.getContentPane().add(panel);
         this.setVisible(true);
-        final ReactiveGui2 es2 = new ReactiveGui2();
-        es2.start();
-        stop.addActionListener(e -> es2.stopCounting());
-        up.addActionListener(e -> es2.setUpFlag());
-        down.addActionListener(e -> es2.setDownFlag());
+        final Agent agent = new Agent();
+        new Thread(agent).start();
+        stop.addActionListener(e -> agent.stopCounting());
+        up.addActionListener(e -> agent.setUpFlag());
+        down.addActionListener(e -> agent.setDownFlag());
     }
-    private class ReactiveGui2 extends Thread {
+    private class Agent implements Runnable {
         private volatile boolean stop;
         private volatile boolean direction = true; //true incrementa, false decrementa
         private volatile int counter;
